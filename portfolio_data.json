@@ -80,6 +80,7 @@
       "kind": "rf"
     }
   ],
+  "cal_ratio": 1.9236,
   "personas": {
     "early": {
       "y_star": 0.7,

@@ -84,19 +84,39 @@ function buildPortfolio(yStar, portfolioData) {
   return result.filter((s) => s.weight > 0.001);
 }
 
+// CVaR·Sortino 선형 보간 — personas 5개 포인트 기준
+function interpolateRiskMetrics(yStar, personas) {
+  if (!personas) return { cvar95: -(yStar * 9.5), cvar99: -(yStar * 10.7), sortino: 0.188 + yStar * 0.011 };
+  const pts = Object.values(personas)
+    .map(p => ({ y: p.y_star, c95: p.cvar95, c99: p.cvar99, s: p.sortino }))
+    .filter((p, i, arr) => arr.findIndex(q => q.y === p.y) === i) // dedupe
+    .sort((a, b) => a.y - b.y);
+  if (yStar <= pts[0].y) return { cvar95: pts[0].c95, cvar99: pts[0].c99, sortino: pts[0].s };
+  if (yStar >= pts[pts.length - 1].y) return { cvar95: pts[pts.length - 1].c95, cvar99: pts[pts.length - 1].c99, sortino: pts[pts.length - 1].s };
+  let lo = pts[0], hi = pts[1];
+  for (let i = 0; i < pts.length - 1; i++) {
+    if (pts[i].y <= yStar && yStar <= pts[i + 1].y) { lo = pts[i]; hi = pts[i + 1]; break; }
+  }
+  const t = (yStar - lo.y) / (hi.y - lo.y);
+  return {
+    cvar95:  +(lo.c95 + t * (hi.c95 - lo.c95)).toFixed(2),
+    cvar99:  +(lo.c99 + t * (hi.c99 - lo.c99)).toFixed(2),
+    sortino: +(lo.s   + t * (hi.s   - lo.s  )).toFixed(3),
+  };
+}
+
 function ResultScreen({ form, onRestart, onBack, portfolioData }) {
   const { riskScore, jobScore, timeScore, familyScore, capitalScore } = scoringLib.calcRiskScore(form, form.textScore ?? null);
   const A = scoringLib.estimateA(riskScore);
   const persona = scoringLib.classifyPersona(A);
 
-  // y* — real CAL 결과(portfolio_data.json) 우선, 없으면 하드코딩 fallback
-  const personaData = portfolioData?.personas?.[persona.key];
-  const yStar = personaData?.y_star ?? persona.allocRisk;
+  // y* — 개인 A값을 CAL 공식에 직접 대입 (연속값)
+  // y* = cal_ratio / A, 법적 상한 70% 적용
+  const calRatio = portfolioData?.cal_ratio ?? 1.9236;
+  const yStar = +Math.min(calRatio / A, 0.70).toFixed(4);
 
-  // CVaR — real data from portfolio_data.json when available, fallback to mock
-  const cvar95  = personaData?.cvar95  ?? -(6 + yStar * 7);
-  const cvar99  = personaData?.cvar99  ?? -(9 + yStar * 10);
-  const sortino = personaData?.sortino ?? (0.85 - yStar * 0.3 + 0.1);
+  // CVaR·Sortino — 5개 기준점 선형 보간
+  const { cvar95, cvar99, sortino } = interpolateRiskMetrics(yStar, portfolioData?.personas);
   const investAmount = (form.amount || 0) * 10000; // 원
   const maxLossWon = Math.round(investAmount * cvar99 / 100 / 10000); // 만 원
 
