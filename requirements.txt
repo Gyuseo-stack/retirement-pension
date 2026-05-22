@@ -1,0 +1,11 @@
+fastapi
+uvicorn[standard]
+python-dotenv
+openai
+pydantic
+numpy
+joblib
+scikit-learn
+sentence-transformers==2.7.0
+torch
+aiofiles

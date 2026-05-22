@@ -1,0 +1,115 @@
+{
+  "last_rebalance": "2025-01-16",
+  "slots": [
+    {
+      "name": "국내주식_코스피",
+      "weight": 0.01,
+      "color": "#00C48C",
+      "kind": "risky"
+    },
+    {
+      "name": "국내주식_코스닥",
+      "weight": 0.2451,
+      "color": "#34D399",
+      "kind": "risky"
+    },
+    {
+      "name": "미국주식_SP500",
+      "weight": 0.1,
+      "color": "#1A6FE8",
+      "kind": "risky"
+    },
+    {
+      "name": "미국주식_나스닥",
+      "weight": 0.4,
+      "color": "#4B9EFF",
+      "kind": "risky"
+    },
+    {
+      "name": "신흥국_인도",
+      "weight": 0.01,
+      "color": "#7B61FF",
+      "kind": "risky"
+    },
+    {
+      "name": "신흥국_중국",
+      "weight": 0.1649,
+      "color": "#9B80FF",
+      "kind": "risky"
+    },
+    {
+      "name": "국내채권_국고채단중기",
+      "weight": 0.01,
+      "color": "#FFB020",
+      "kind": "risky"
+    },
+    {
+      "name": "국내채권_국고채장기",
+      "weight": 0.01,
+      "color": "#FFD166",
+      "kind": "risky"
+    },
+    {
+      "name": "국내채권_회사채",
+      "weight": 0.01,
+      "color": "#FF6B35",
+      "kind": "risky"
+    },
+    {
+      "name": "국내채권_종합",
+      "weight": 0.01,
+      "color": "#FF9F6B",
+      "kind": "risky"
+    },
+    {
+      "name": "해외채권_미국국채",
+      "weight": 0.01,
+      "color": "#06D6A0",
+      "kind": "risky"
+    },
+    {
+      "name": "원자재_금",
+      "weight": 0.01,
+      "color": "#F4A261",
+      "kind": "risky"
+    },
+    {
+      "name": "무위험(현금성)",
+      "weight": 0.01,
+      "color": "#B0BAD4",
+      "kind": "rf"
+    }
+  ],
+  "personas": {
+    "early": {
+      "y_star": 0.7,
+      "cvar95": -6.67,
+      "cvar99": -7.43,
+      "sortino": 0.196
+    },
+    "accum": {
+      "y_star": 0.7,
+      "cvar95": -6.67,
+      "cvar99": -7.43,
+      "sortino": 0.196
+    },
+    "family": {
+      "y_star": 0.5496,
+      "cvar95": -5.1,
+      "cvar99": -5.7,
+      "sortino": 0.195
+    },
+    "retire": {
+      "y_star": 0.3847,
+      "cvar95": -3.37,
+      "cvar99": -3.81,
+      "sortino": 0.192
+    },
+    "senior": {
+      "y_star": 0.2748,
+      "cvar95": -2.22,
+      "cvar99": -2.53,
+      "sortino": 0.188
+    }
+  }
+}

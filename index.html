@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>XAI 퇴직연금 포트폴리오 진단</title>
+<link rel="stylesheet" href="styles.css">
+
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+</head>
+<body>
+<div id="root"></div>
+<script>
+// Suppress benign ResizeObserver loop warning (browser noise, not a bug)
+(function() {
+  const origRO = window.ResizeObserver;
+  if (!origRO) return;
+  window.ResizeObserver = class extends origRO {
+    constructor(cb) {
+      super((entries, obs) => {
+        window.requestAnimationFrame(() => {
+          try { cb(entries, obs); } catch (e) {}
+        });
+      });
+    }
+  };
+  window.addEventListener('error', (e) => {
+    if (e.message && e.message.includes('ResizeObserver loop')) {
+      e.stopImmediatePropagation();
+      e.preventDefault();
+      return false;
+    }
+  }, true);
+})();
+</script>
+
+<script>
+  // API 키 설정 — 이 파일은 .gitignore에 추가하거나 키를 비워두세요
+  window.OPENAI_API_KEY = '';
+
+  // Step 6/7 산출 결과 — 10_export_json.py로 생성, file:// 프로토콜에서도 동작
+  window.__PORTFOLIO_DATA__ = {
+    "last_rebalance": "2025-01-16",
+    "slots": [
+      { "name": "국내주식_코스피",      "weight": 0.01,   "color": "#00C48C", "kind": "risky" },
+      { "name": "국내주식_코스닥",      "weight": 0.2451, "color": "#34D399", "kind": "risky" },
+      { "name": "미국주식_SP500",       "weight": 0.1,    "color": "#1A6FE8", "kind": "risky" },
+      { "name": "미국주식_나스닥",      "weight": 0.4,    "color": "#4B9EFF", "kind": "risky" },
+      { "name": "신흥국_인도",          "weight": 0.01,   "color": "#7B61FF", "kind": "risky" },
+      { "name": "신흥국_중국",          "weight": 0.1649, "color": "#9B80FF", "kind": "risky" },
+      { "name": "국내채권_국고채단중기", "weight": 0.01,   "color": "#FFB020", "kind": "risky" },
+      { "name": "국내채권_국고채장기",  "weight": 0.01,   "color": "#FFD166", "kind": "risky" },
+      { "name": "국내채권_회사채",      "weight": 0.01,   "color": "#FF6B35", "kind": "risky" },
+      { "name": "국내채권_종합",        "weight": 0.01,   "color": "#FF9F6B", "kind": "risky" },
+      { "name": "해외채권_미국국채",    "weight": 0.01,   "color": "#06D6A0", "kind": "risky" },
+      { "name": "원자재_금",            "weight": 0.01,   "color": "#F4A261", "kind": "risky" },
+      { "name": "무위험(현금성)",        "weight": 0.01,   "color": "#B0BAD4", "kind": "rf"    }
+    ],
+    "personas": {
+      "early":  { "y_star": 0.70,   "cvar95": -6.67, "cvar99": -7.43, "sortino": 0.196 },
+      "accum":  { "y_star": 0.70,   "cvar95": -6.67, "cvar99": -7.43, "sortino": 0.196 },
+      "family": { "y_star": 0.5496, "cvar95": -5.10, "cvar99": -5.70, "sortino": 0.195 },
+      "retire": { "y_star": 0.3847, "cvar95": -3.37, "cvar99": -3.81, "sortino": 0.192 },
+      "senior": { "y_star": 0.2748, "cvar95": -2.22, "cvar99": -2.53, "sortino": 0.188 }
+    }
+  };
+</script>
+<script type="text/babel" src="ios-frame.jsx"></script>
+<script type="text/babel" src="widgets.jsx"></script>
+<script type="text/babel" src="screens-flow.jsx"></script>
+<script type="text/babel" src="screens-result.jsx"></script>
+<script type="text/babel" src="chatbot.jsx"></script>
+<script type="text/babel" src="app.jsx"></script>
+</body>
+</html>
