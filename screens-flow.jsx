@@ -114,7 +114,7 @@ function Step1({ form, setForm, onNext, onBack }) {
     { val: 'others',       label: '기타 동거인', ico: '🤝' },
   ];
 
-  const ageErr = form.age && (form.age < 19 || form.age > 80) ? '19세 이상 80세 이하로 입력해주세요' : '';
+  const ageErr = form.age && (form.age < 25 || form.age > 65) ? '25세 이상 65세 이하로 입력해주세요' : '';
   const amtErr = form.amount && form.amount < 100 ? '최소 100만 원 이상 입력해주세요' : '';
   const valid = form.age && !ageErr && form.horizon && form.amount && !amtErr;
 
