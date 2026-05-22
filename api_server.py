@@ -87,8 +87,10 @@ class PersonaRequest(BaseModel):
 # ── /api/chat ───────────────────────────────────────────────────
 @app.post("/api/chat")
 async def chat(req: ChatRequest):
+    client = get_client()  # API 키 확인을 스트리밍 시작 전에 수행
+
     def generate():
-        stream = get_client().chat.completions.create(
+        stream = client.chat.completions.create(
             model="gpt-4o-mini",
             messages=req.messages,
             max_tokens=1000,

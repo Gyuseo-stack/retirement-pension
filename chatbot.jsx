@@ -206,7 +206,7 @@ async function callOpenAI(apiKey, tab, history, personaContext, onChunk, onDone,
     }
     onDone(full);
   } catch (e) {
-    onError('프록시 서버에 연결할 수 없습니다. api_server.py를 먼저 실행해주세요.');
+    onError('챗봇 서버에 연결할 수 없습니다. 잠시 후 다시 시도해주세요.');
   }
 }
 
