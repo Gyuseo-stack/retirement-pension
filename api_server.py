@@ -9,7 +9,11 @@
 import asyncio, json, os
 from pathlib import Path
 
+import numpy as np
+import pandas as pd
+
 from fastapi import FastAPI, HTTPException
+from fastapi.concurrency import run_in_threadpool
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import StreamingResponse
 from fastapi.staticfiles import StaticFiles
@@ -21,6 +25,62 @@ os.environ.setdefault("TOKENIZERS_PARALLELISM", "false")
 os.environ.setdefault("OMP_NUM_THREADS", "1")
 
 load_dotenv()
+
+# ── 역사적 CVaR 계산용 데이터 (서버 시작 시 1회 로드) ────────────
+_risky_port_r: "pd.Series | None" = None   # 리스크 포트폴리오 월 수익률
+_rf_r:         "pd.Series | None" = None   # 무위험 자산 월 수익률
+
+DATA_DIR      = Path(__file__).parent.parent / "최종_데이터셋"
+CVAR_JSON     = Path(__file__).parent / "cvar_returns.json"
+
+def _load_return_data() -> None:
+    """사전 계산 JSON 우선 로드, 없으면 parquet에서 직접 계산."""
+    global _risky_port_r, _rf_r
+    try:
+        # ① 사전 계산 JSON (Railway 배포 환경)
+        if CVAR_JSON.exists():
+            with open(CVAR_JSON, encoding="utf-8") as f:
+                d = json.load(f)
+            idx = pd.to_datetime(d["dates"])
+            _risky_port_r = pd.Series(d["risky_port_r"], index=idx, dtype=float)
+            _rf_r         = pd.Series(d["rf_r"],         index=idx, dtype=float)
+            print(f"[cvar] Loaded from JSON — {len(_risky_port_r)} months", flush=True)
+            return
+
+        # ② parquet 원본 (로컬 환경)
+        slots_path   = DATA_DIR / "입력_데이터" / "slot_returns.parquet"
+        weights_path = DATA_DIR / "step5_지역제약포트폴리오_최종" / "portfolio_weights_constrained.parquet"
+        if not slots_path.exists() or not weights_path.exists():
+            print("[cvar] Data files not found — CVaR endpoint unavailable", flush=True)
+            return
+
+        df_r = pd.read_parquet(slots_path)
+        df_w = pd.read_parquet(weights_path)
+        df_r_monthly = df_r.resample("ME").apply(lambda x: (1 + x).prod() - 1)
+        df_w_monthly = (df_w.resample("ME").ffill()
+                            .reindex(df_r_monthly.index, method="ffill"))
+
+        rf_col  = "무위험(현금성)"
+        risky_r = df_r_monthly.drop(columns=[rf_col])
+        risky_w = df_w_monthly.drop(columns=[rf_col])
+        _rf_r   = df_r_monthly[rf_col]
+
+        vals = []
+        for dt in risky_r.index:
+            r_row = risky_r.loc[dt]
+            w_row = risky_w.loc[dt]
+            avail = r_row.notna()
+            if not avail.any():
+                vals.append(float(_rf_r.loc[dt]))
+                continue
+            w_a, r_a = w_row[avail], r_row[avail]
+            w_sum = float(w_a.sum())
+            vals.append(float((w_a / w_sum * r_a).sum()) if w_sum > 0 else float(_rf_r.loc[dt]))
+
+        _risky_port_r = pd.Series(vals, index=risky_r.index)
+        print(f"[cvar] Return data loaded from parquet — {len(_risky_port_r)} months", flush=True)
+    except Exception as e:
+        print(f"[cvar] Data load failed: {e}", flush=True)
 
 app = FastAPI()
 app.add_middleware(
@@ -96,6 +156,8 @@ async def startup() -> None:
     _struct_worker_lock = asyncio.Lock()
     asyncio.create_task(_start_worker())
     asyncio.create_task(_start_struct_worker())
+    # 리턴 데이터 로드 (blocking but fast — ~0.2s)
+    await run_in_threadpool(_load_return_data)
 
 
 # ── Request models ──────────────────────────────────────────────
@@ -105,6 +167,10 @@ class ChatRequest(BaseModel):
 
 class PersonaRequest(BaseModel):
     text: str
+
+
+class CvarRequest(BaseModel):
+    y_star: float
 
 
 class StructRequest(BaseModel):
@@ -171,6 +237,29 @@ async def analyze_persona(req: PersonaRequest):
     if "error" in result:
         raise HTTPException(500, result["error"])
     return result
+
+
+# ── /api/calc_cvar ──────────────────────────────────────────────
+@app.post("/api/calc_cvar")
+async def calc_cvar(req: CvarRequest):
+    if _risky_port_r is None or _rf_r is None:
+        raise HTTPException(503, "수익률 데이터가 아직 로드 중입니다. 잠시 후 다시 시도해주세요.")
+
+    y = float(np.clip(req.y_star, 0.0, 1.0))
+
+    def _compute():
+        port = y * _risky_port_r + (1 - y) * _rf_r
+        q05  = float(port.quantile(0.05))
+        q01  = float(port.quantile(0.01))
+        cvar95 = round(float(port[port <= q05].mean()) * 100, 2)
+        cvar99 = round(float(port[port <= q01].mean()) * 100, 2)
+        # Sortino: monthly mean / monthly downside-std (음수 수익월 기준)
+        downside = float(port[port < 0].std())
+        sortino  = round(float(port.mean()) / downside, 3) if downside > 0 else 0.0
+        n_months = int(len(port))
+        return {"cvar95": cvar95, "cvar99": cvar99, "sortino": sortino, "n_months": n_months}
+
+    return await run_in_threadpool(_compute)
 
 
 # ── /api/score_structured ───────────────────────────────────────

@@ -4,6 +4,8 @@ python-dotenv
 openai
 pydantic
 numpy
+pandas
+pyarrow
 joblib
 scikit-learn
 sentence-transformers==2.7.0
