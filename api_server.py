@@ -30,7 +30,16 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
+_openai_client: OpenAI | None = None
+
+def get_client() -> OpenAI:
+    global _openai_client
+    if _openai_client is None:
+        api_key = os.getenv("OPENAI_API_KEY")
+        if not api_key:
+            raise HTTPException(503, "OPENAI_API_KEY 환경변수가 설정되지 않았습니다.")
+        _openai_client = OpenAI(api_key=api_key)
+    return _openai_client
 
 INFER_SCRIPT = Path(__file__).parent / "persona_infer.py"
 
@@ -79,7 +88,7 @@ class PersonaRequest(BaseModel):
 @app.post("/api/chat")
 async def chat(req: ChatRequest):
     def generate():
-        stream = client.chat.completions.create(
+        stream = get_client().chat.completions.create(
             model="gpt-4o-mini",
             messages=req.messages,
             max_tokens=1000,
