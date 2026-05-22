@@ -894,3 +894,16 @@ input {
 
 /* tweaks reset */
 .tweaks-floating { z-index: 9999; }
+
+/* Mobile: full-screen app layout */
+@media (max-width: 500px) {
+  body {
+    padding: 0;
+    overflow: hidden;
+    display: block;
+  }
+  #root {
+    position: fixed;
+    inset: 0;
+  }
+}

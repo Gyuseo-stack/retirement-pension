@@ -1,0 +1,11 @@
+{
+  "name": "퇴직연금 포트폴리오 진단",
+  "short_name": "퇴직연금",
+  "description": "AI 기반 퇴직연금 포트폴리오 진단 서비스",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#1a3fcc",
+  "theme_color": "#1a3fcc",
+  "orientation": "portrait-primary",
+  "lang": "ko"
+}

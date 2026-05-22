@@ -113,30 +113,45 @@ function App() {
   );
 }
 
-// Mount inside iOS frame
+// Mount inside iOS frame (desktop) or full-screen (mobile)
 function Root() {
   const DEVICE_W = 390, DEVICE_H = 844;
+  const isMobile = () => window.innerWidth <= 500;
 
   const calcScale = () => {
     const s = Math.min(
       1,
-      (window.innerHeight - 120) / DEVICE_H,   // 120: 브라우저 크롬 + 여백
+      (window.innerHeight - 120) / DEVICE_H,
       (window.innerWidth  -  48) / DEVICE_W,
     );
     return Math.max(0.5, s);
   };
 
+  const [mobile, setMobile] = useStateA(isMobile);
   const [scale, setScale] = useStateA(calcScale);
 
   useEffectA(() => {
-    const update = () => setScale(calcScale());
+    const update = () => { setMobile(isMobile()); setScale(calcScale()); };
     window.addEventListener('resize', update);
     return () => window.removeEventListener('resize', update);
   }, []);
 
+  if (mobile) {
+    return (
+      <div style={{
+        position: 'fixed',
+        top: 0, left: 0, right: 0, bottom: 0,
+        paddingTop: 'env(safe-area-inset-top, 0px)',
+        paddingBottom: 'env(safe-area-inset-bottom, 0px)',
+        background: 'var(--bg)',
+      }}>
+        <App/>
+      </div>
+    );
+  }
+
   return (
     <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 12 }}>
-      {/* 스케일 래퍼: 레이아웃 크기를 시각 크기에 맞춤 */}
       <div style={{ width: Math.round(DEVICE_W * scale), height: Math.round(DEVICE_H * scale), flexShrink: 0 }}>
         <div style={{ transform: `scale(${scale})`, transformOrigin: 'top left' }}>
           <IOSDevice width={DEVICE_W} height={DEVICE_H} dark={false}>
