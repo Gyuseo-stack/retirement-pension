@@ -496,12 +496,25 @@ input {
   background: linear-gradient(160deg, #DCEEFF 0%, #6BB0FF 50%, #1A6FE8 100%);
   display: flex;
   flex-direction: column;
-  padding: 78px 24px 48px;
+  padding: 60px 0 0;
   color: #fff;
   overflow: hidden;
 }
-.welcome-illust {
+.welcome-scroll {
   flex: 1;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  padding: 0 24px;
+  scrollbar-width: none;
+}
+.welcome-scroll::-webkit-scrollbar { display: none; }
+.welcome-bottom {
+  flex-shrink: 0;
+  padding: 16px 24px 32px;
+}
+.welcome-illust {
+  flex: 0 1 200px;
+  min-height: 120px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -539,7 +552,7 @@ input {
   font-size: 11px;
   color: rgba(255,255,255,0.65);
   line-height: 1.5;
-  margin-top: 14px;
+  margin-top: 12px;
   text-align: center;
 }
 .welcome .start-btn {

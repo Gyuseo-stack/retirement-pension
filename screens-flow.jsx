@@ -43,40 +43,46 @@ function WelcomeScreen({ onStart }) {
         <div style={{ width: 140, height: 140, borderRadius: '50%', background: '#fff' }}/>
       </div>
 
-      <div style={{ position: 'relative', zIndex: 2, marginTop: 8 }}>
-        <div className="badge">
-          <span style={{ width: 6, height: 6, borderRadius: 99, background: '#FFD66B' }}/>
-          XAI 기반 포트폴리오 진단 · 약 3분
-        </div>
-      </div>
-
-      <div className="welcome-illust">
-        <div style={{ transform: 'translateY(-10px)' }}>
-          <IsoStack size={240} theme="welcome"/>
-        </div>
-      </div>
-
-      <div style={{ position: 'relative', zIndex: 2 }}>
-        <h1>퇴직연금,<br/>방치 말고 진단부터</h1>
-        <p>5가지 정보로 페르소나 리스크 스코어를 계산해<br/>참고용 포트폴리오 분석 정보를 확인할 수 있습니다.</p>
-
-        <div className="welcome-features">
-          <div className="welcome-feat">
-            <div className="icon">📊</div>
-            <div>
-              <div className="t">포트폴리오 구성 이유, 한눈에 봐요</div>
-              <div className="d">각 자산을 왜 담았는지 시각적으로 보여주세요</div>
-            </div>
-          </div>
-          <div className="welcome-feat">
-            <div className="icon">⚖️</div>
-            <div>
-              <div className="t">방치하면 얼마나 손해일까요?</div>
-              <div className="d">30년 복리 시뮬레이션으로 기회비용을 계산해요</div>
-            </div>
+      {/* scrollable body */}
+      <div className="welcome-scroll">
+        <div style={{ position: 'relative', zIndex: 2, marginTop: 8 }}>
+          <div className="badge">
+            <span style={{ width: 6, height: 6, borderRadius: 99, background: '#FFD66B' }}/>
+            XAI 기반 포트폴리오 진단 · 약 3분
           </div>
         </div>
 
+        <div className="welcome-illust">
+          <div style={{ transform: 'translateY(-10px)' }}>
+            <IsoStack size={240} theme="welcome"/>
+          </div>
+        </div>
+
+        <div style={{ position: 'relative', zIndex: 2 }}>
+          <h1>퇴직연금,<br/>방치 말고 진단부터</h1>
+          <p>5가지 정보로 페르소나 리스크 스코어를 계산해<br/>참고용 포트폴리오 분석 정보를 확인할 수 있습니다.</p>
+
+          <div className="welcome-features">
+            <div className="welcome-feat">
+              <div className="icon">📊</div>
+              <div>
+                <div className="t">포트폴리오 구성 이유, 한눈에 봐요</div>
+                <div className="d">각 자산을 왜 담았는지 시각적으로 보여주세요</div>
+              </div>
+            </div>
+            <div className="welcome-feat">
+              <div className="icon">⚖️</div>
+              <div>
+                <div className="t">방치하면 얼마나 손해일까요?</div>
+                <div className="d">30년 복리 시뮬레이션으로 기회비용을 계산해요</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* fixed bottom — always visible */}
+      <div className="welcome-bottom">
         <button className="start-btn" onClick={onStart}>
           진단 시작하기
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
