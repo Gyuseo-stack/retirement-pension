@@ -94,6 +94,17 @@ const SYSTEM_BASE = `당신은 퇴직연금 전문 AI 상담사입니다.
 ■ 금리 국면별 전략
 - 금리 인상기: 채권 비중 축소, 단기채·원자재 비중 확대
 - 금리 인하기: 장기채 비중 확대, 주식 비중 유지
+
+============================================================
+[답변 규칙 — 반드시 지켜야 함]
+============================================================
+- 첫 줄에 핵심 결론 한 줄만 써. 예) "시간 여력이 높아서 위험자산 비중이 55%로 설정됐어요."
+- 이유는 3줄 이내로, 각 항목을 줄바꿈으로만 구분해
+- 마크다운 기호(**, ##, --, * 등) 절대 사용하지 마
+- "~을 의미합니다", "~을 나타냅니다" 같은 반복 표현 쓰지 마
+- 숫자 기여도는 괄호로 짧게 표시해. 예) 시간 여력 73% (+7.0%p)
+- 마지막 줄은 한 줄 요약으로 마무리
+- 전체 답변 5줄 이내
 `;
 
 const TAB_CONTEXT = {
@@ -208,6 +219,29 @@ async function callOpenAI(apiKey, tab, history, personaContext, onChunk, onDone,
   } catch (e) {
     onError('챗봇 서버에 연결할 수 없습니다. 잠시 후 다시 시도해주세요.');
   }
+}
+
+// ─── AI 답변 렌더러 — 첫 줄 강조 + 줄바꿈 처리 ─────────────────
+function renderAIMessage(content) {
+  const lines = content.split('\n').map(l => l.trim()).filter(l => l);
+  if (lines.length <= 1) {
+    return <span style={{ whiteSpace: 'pre-wrap' }}>{content}</span>;
+  }
+  return (
+    <div>
+      <div style={{ fontWeight: 700, color: 'var(--text)', marginBottom: 8, lineHeight: 1.5 }}>
+        {lines[0]}
+      </div>
+      {lines.slice(1, lines.length - 1).map((l, i) => (
+        <div key={i} style={{ color: 'var(--text)', lineHeight: 1.6, marginBottom: 2 }}>{l}</div>
+      ))}
+      {lines.length > 1 && (
+        <div style={{ color: 'var(--text-2)', marginTop: 8, fontSize: 12, lineHeight: 1.5 }}>
+          {lines[lines.length - 1]}
+        </div>
+      )}
+    </div>
+  );
 }
 
 // ─── ChatModal 컴포넌트 ────────────────────────────────────────
@@ -353,7 +387,7 @@ function ChatModal({ open, onClose, personaContext }) {
                 fontSize: 13, lineHeight: 1.55,
                 boxShadow: '0 1px 4px rgba(0,0,0,0.07)',
               }}>
-                {m.content}
+                {m.role === 'assistant' ? renderAIMessage(m.content) : m.content}
               </div>
             </div>
           ))}
