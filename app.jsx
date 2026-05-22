@@ -117,22 +117,30 @@ function App() {
 function Root() {
   const DEVICE_W = 390, DEVICE_H = 844;
 
-  const getState = () => ({
-    mobile: window.innerWidth <= 500,
-    scale: Math.max(0.5, Math.min(1,
-      (window.innerHeight - 120) / DEVICE_H,
-      (window.innerWidth - 48) / DEVICE_W,
-    )),
-    mobileScale: window.innerWidth / 390,
-    innerH: window.innerHeight,
-  });
+  const getState = () => {
+    const vH = window.visualViewport?.height || window.innerHeight;
+    const vW = window.innerWidth;
+    return {
+      mobile: vW <= 500,
+      scale: Math.max(0.5, Math.min(1,
+        (window.innerHeight - 120) / DEVICE_H,
+        (vW - 48) / DEVICE_W,
+      )),
+      mobileScale: vW / 390,
+      innerH: vH,
+    };
+  };
 
   const [st, setSt] = useStateA(getState);
 
   useEffectA(() => {
     const update = () => setSt(getState());
     window.addEventListener('resize', update);
-    return () => window.removeEventListener('resize', update);
+    window.visualViewport?.addEventListener('resize', update);
+    return () => {
+      window.removeEventListener('resize', update);
+      window.visualViewport?.removeEventListener('resize', update);
+    };
   }, []);
 
   if (st.mobile) {
