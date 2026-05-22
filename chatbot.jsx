@@ -402,7 +402,7 @@ function ChatModal({ open, onClose, personaContext }) {
                 fontSize: 13, lineHeight: 1.55,
                 boxShadow: '0 1px 4px rgba(0,0,0,0.07)',
               }}>
-                {streaming}
+                {renderAIMessage(streaming)}
                 <span style={{ display: 'inline-block', animation: 'blink 1s step-end infinite', marginLeft: 2 }}>▌</span>
               </div>
             </div>
