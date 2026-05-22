@@ -106,7 +106,17 @@ function interpolateRiskMetrics(yStar, personas) {
 }
 
 function ResultScreen({ form, onRestart, onBack, portfolioData }) {
-  const { riskScore, jobScore, timeScore, familyScore, capitalScore } = scoringLib.calcRiskScore(form, form.textScore ?? null);
+  // 컴포넌트별 점수 — SHAP 시각화용 (JS 공식 그대로)
+  const { riskScore: formulaScore, jobScore, timeScore, familyScore, capitalScore } =
+    scoringLib.calcRiskScore(form, null);
+
+  // 최종 riskScore: ML 모델 점수(structScore) 우선 사용, 폴백 시 JS 공식
+  // textScore 있으면 10% 가중 혼합 (JS 공식과 동일 비율)
+  const baseScore = form.structScore ?? formulaScore;
+  const riskScore = form.textScore != null
+    ? +(baseScore * 0.90 + form.textScore * 0.10).toFixed(4)
+    : baseScore;
+
   const A = scoringLib.estimateA(riskScore);
   const persona = scoringLib.classifyPersona(A);
 

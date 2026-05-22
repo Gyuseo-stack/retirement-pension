@@ -41,11 +41,16 @@ def get_client() -> OpenAI:
         _openai_client = OpenAI(api_key=api_key)
     return _openai_client
 
-INFER_SCRIPT = Path(__file__).parent / "persona_infer.py"
+INFER_SCRIPT   = Path(__file__).parent / "persona_infer.py"
+STRUCT_SCRIPT  = Path(__file__).parent / "struct_infer.py"
 
-# ── 퍼시스턴트 추론 워커 ────────────────────────────────────────
+# ── 퍼시스턴트 추론 워커 (텍스트 페르소나) ──────────────────────
 _worker: asyncio.subprocess.Process | None = None
-_worker_lock: asyncio.Lock | None = None  # 이벤트루프 시작 후 초기화
+_worker_lock: asyncio.Lock | None = None
+
+# ── 퍼시스턴트 추론 워커 (정형 변수) ───────────────────────────
+_struct_worker: asyncio.subprocess.Process | None = None
+_struct_worker_lock: asyncio.Lock | None = None
 
 
 async def _start_worker() -> None:
@@ -58,7 +63,6 @@ async def _start_worker() -> None:
             stdout=asyncio.subprocess.PIPE,
             stderr=asyncio.subprocess.PIPE,
         )
-        # 모델 로드 완료 대기 (최대 180초)
         ready = await asyncio.wait_for(proc.stdout.readline(), timeout=180)
         if ready.strip() == b"READY":
             _worker = proc
@@ -67,12 +71,31 @@ async def _start_worker() -> None:
         _worker = None
 
 
+async def _start_struct_worker() -> None:
+    """struct_infer.py를 실행하고 READY 신호를 기다립니다."""
+    global _struct_worker
+    try:
+        proc = await asyncio.create_subprocess_exec(
+            "python3", str(STRUCT_SCRIPT),
+            stdin=asyncio.subprocess.PIPE,
+            stdout=asyncio.subprocess.PIPE,
+            stderr=asyncio.subprocess.PIPE,
+        )
+        ready = await asyncio.wait_for(proc.stdout.readline(), timeout=30)
+        if ready.strip() == b"READY":
+            _struct_worker = proc
+    except Exception as e:
+        print(f"[struct_worker] 시작 실패: {e}", flush=True)
+        _struct_worker = None
+
+
 @app.on_event("startup")
 async def startup() -> None:
-    global _worker_lock
-    _worker_lock = asyncio.Lock()
-    # 백그라운드에서 모델 로드 시작 (서버 응답 블로킹 없음)
+    global _worker_lock, _struct_worker_lock
+    _worker_lock        = asyncio.Lock()
+    _struct_worker_lock = asyncio.Lock()
     asyncio.create_task(_start_worker())
+    asyncio.create_task(_start_struct_worker())
 
 
 # ── Request models ──────────────────────────────────────────────
@@ -82,6 +105,19 @@ class ChatRequest(BaseModel):
 
 class PersonaRequest(BaseModel):
     text: str
+
+
+class StructRequest(BaseModel):
+    age: int = 40
+    jobStab: str = "general"
+    horizon: str = "10_to_20"
+    dependents: list[str] = []
+    laborRatio: float = 80
+    salary: float = 0
+    salaryMode: str = "annual"
+    tenure: int = 0
+    expectedTenure: int = 10
+    amount: float = 0
 
 
 # ── /api/chat ───────────────────────────────────────────────────
@@ -137,11 +173,42 @@ async def analyze_persona(req: PersonaRequest):
     return result
 
 
+# ── /api/score_structured ───────────────────────────────────────
+@app.post("/api/score_structured")
+async def score_structured(req: StructRequest):
+    global _struct_worker
+
+    if not STRUCT_SCRIPT.exists():
+        raise HTTPException(503, "정형 추론 스크립트가 없습니다.")
+
+    async with _struct_worker_lock:
+        if _struct_worker is None or _struct_worker.returncode is not None:
+            await _start_struct_worker()
+        if _struct_worker is None:
+            raise HTTPException(503, "정형 추론 워커가 아직 준비 중이에요. 잠시 후 다시 시도해주세요.")
+
+        payload = json.dumps(req.model_dump(), ensure_ascii=False) + "\n"
+        _struct_worker.stdin.write(payload.encode("utf-8"))
+        await _struct_worker.stdin.drain()
+
+        try:
+            line = await asyncio.wait_for(_struct_worker.stdout.readline(), timeout=10)
+        except asyncio.TimeoutError:
+            _struct_worker = None
+            raise HTTPException(504, "추론 시간 초과 (10초)")
+
+    result = json.loads(line.decode().strip())
+    if "error" in result:
+        raise HTTPException(500, result["error"])
+    return result
+
+
 # ── /health ─────────────────────────────────────────────────────
 @app.get("/health")
 def health():
-    worker_ready = _worker is not None and _worker.returncode is None
-    return {"status": "ok", "worker_ready": worker_ready}
+    worker_ready        = _worker is not None and _worker.returncode is None
+    struct_worker_ready = _struct_worker is not None and _struct_worker.returncode is None
+    return {"status": "ok", "worker_ready": worker_ready, "struct_worker_ready": struct_worker_ready}
 
 
 # API 라우트 등록 후 맨 마지막에 정적 파일 서빙

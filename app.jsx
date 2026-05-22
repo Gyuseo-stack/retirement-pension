@@ -20,6 +20,7 @@ function App() {
     expectedTenure: null,
     lifestyle: '',
     textScore: null,
+    structScore: null,
   });
 
   const go = (next) => {
@@ -43,7 +44,7 @@ function App() {
       age: null, horizon: null, dependents: [], amount: null,
       tenure: null, laborRatio: 100,
       salaryMode: 'year', salary: null, jobStab: null, expectedTenure: null,
-      lifestyle: '', textScore: null,
+      lifestyle: '', textScore: null, structScore: null,
     });
     go('welcome');
   };
@@ -63,6 +64,7 @@ function App() {
       expectedTenure: 20,
       lifestyle: '',
       textScore: null,
+      structScore: null,
     });
   };
 
@@ -92,7 +94,7 @@ function App() {
       {screen === 'step1' && <Step1 form={form} setForm={setForm} onNext={goNext} onBack={goBack}/>}
       {screen === 'step2' && <Step2 form={form} setForm={setForm} onNext={goNext} onBack={goBack}/>}
       {screen === 'step3' && <Step3 form={form} setForm={setForm} onNext={goNext} onBack={goBack}/>}
-      {screen === 'step4' && <Step4 form={form} setForm={setForm} onNext={goNext} onBack={goBack} onSkip={() => { setForm(f => ({ ...f, textScore: null })); go('result'); }}/>}
+      {screen === 'step4' && <Step4 form={form} setForm={setForm} onNext={goNext} onBack={goBack} onSkip={() => { setForm(f => ({ ...f, textScore: null, structScore: null })); go('loading'); }}/>}
       {screen === 'loading' && <LoadingScreen form={form} setForm={setForm} onNext={() => go('result')}/>}
       {screen === 'result' && <ResultScreen form={form} onRestart={restart} onBack={goBack} portfolioData={portfolioData}/>}
 

@@ -511,19 +511,45 @@ function LoadingScreen({ form, setForm, onNext }) {
     }, 2000);
 
     const run = async () => {
+      // 텍스트 분석 + 정형 ML 모델 병렬 호출
+      const tasks = [];
+
       if (form.lifestyle.trim()) {
-        try {
-          const res = await fetch('/api/analyze_persona', {
+        tasks.push(
+          fetch('/api/analyze_persona', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ text: form.lifestyle }),
-          });
-          if (res.ok) {
-            const { score } = await res.json();
-            setForm(f => ({ ...f, textScore: score }));
-          }
-        } catch {}
+          })
+            .then(r => r.ok ? r.json() : null)
+            .then(data => { if (data?.score != null) setForm(f => ({ ...f, textScore: data.score })); })
+            .catch(() => {})
+        );
       }
+
+      tasks.push(
+        fetch('/api/score_structured', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            age:            form.age ?? 40,
+            jobStab:        form.jobStab ?? 'general',
+            horizon:        form.horizon ?? '10_to_20',
+            dependents:     form.dependents ?? [],
+            laborRatio:     form.laborRatio ?? 80,
+            salary:         form.salary ?? 0,
+            salaryMode:     form.salaryMode ?? 'annual',
+            tenure:         form.tenure ?? 0,
+            expectedTenure: form.expectedTenure ?? 10,
+            amount:         form.amount ?? 0,
+          }),
+        })
+          .then(r => r.ok ? r.json() : null)
+          .then(data => { if (data?.score != null) setForm(f => ({ ...f, structScore: data.score })); })
+          .catch(() => {})
+      );
+
+      await Promise.all(tasks);
       clearInterval(interval);
       setTimeout(onNext, 600);
     };
