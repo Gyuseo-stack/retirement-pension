@@ -203,15 +203,15 @@ function Step1({ form, setForm, onNext, onBack }) {
               <div className="field-hint">= {(form.amount * 10000).toLocaleString('ko-KR')} 원</div>
             )}
         </div>
-      </div>
 
-      <div className="cta-bar">
-        <button className="btn btn-secondary" onClick={onBack}>
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
-            <path d="M15 18l-6-6 6-6" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"/>
-          </svg>
-        </button>
-        <button className="btn btn-primary" disabled={!valid} onClick={onNext}>다음</button>
+        <div className="cta-bar">
+          <button className="btn btn-secondary" onClick={onBack}>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+              <path d="M15 18l-6-6 6-6" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"/>
+            </svg>
+          </button>
+          <button className="btn btn-primary" disabled={!valid} onClick={onNext}>다음</button>
+        </div>
       </div>
     </div>
   );
@@ -278,15 +278,14 @@ function Step2({ form, setForm, onNext, onBack }) {
           />
         </div>
 
-      </div>
-
-      <div className="cta-bar">
-        <button className="btn btn-secondary" onClick={onBack}>
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
-            <path d="M15 18l-6-6 6-6" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"/>
-          </svg>
-        </button>
-        <button className="btn btn-primary" disabled={!valid} onClick={onNext}>다음</button>
+        <div className="cta-bar">
+          <button className="btn btn-secondary" onClick={onBack}>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+              <path d="M15 18l-6-6 6-6" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"/>
+            </svg>
+          </button>
+          <button className="btn btn-primary" disabled={!valid} onClick={onNext}>다음</button>
+        </div>
       </div>
     </div>
   );
@@ -402,20 +401,19 @@ function Step3({ form, setForm, onNext, onBack }) {
           </div>
         </div>
 
-      </div>
-
-      <div className="cta-bar">
-        <button className="btn btn-secondary" onClick={onBack}>
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
-            <path d="M15 18l-6-6 6-6" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"/>
-          </svg>
-        </button>
-        <button className="btn btn-primary" disabled={!valid} onClick={onNext}>
-          다음
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
-            <path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"/>
-          </svg>
-        </button>
+        <div className="cta-bar">
+          <button className="btn btn-secondary" onClick={onBack}>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+              <path d="M15 18l-6-6 6-6" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"/>
+            </svg>
+          </button>
+          <button className="btn btn-primary" disabled={!valid} onClick={onNext}>
+            다음
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+              <path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"/>
+            </svg>
+          </button>
+        </div>
       </div>
     </div>
   );
@@ -468,26 +466,26 @@ function Step4({ form, setForm, onNext, onBack, onSkip }) {
           AI가 투자 성향 분석에 참고해요.<br/>
           작성하지 않아도 기본 점수로 진단해요.
         </div>
-      </div>
 
-      <div className="cta-bar">
-        <button
-          className="btn btn-secondary"
-          onClick={onSkip}
-          style={{ flex: '0 0 80px', whiteSpace: 'nowrap' }}
-        >
-          건너뛰기
-        </button>
-        <button
-          className="btn btn-primary"
-          disabled={!form.lifestyle.trim()}
-          onClick={onNext}
-        >
-          분석 시작
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
-            <path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"/>
-          </svg>
-        </button>
+        <div className="cta-bar">
+          <button
+            className="btn btn-secondary"
+            onClick={onSkip}
+            style={{ flex: '0 0 80px', whiteSpace: 'nowrap' }}
+          >
+            건너뛰기
+          </button>
+          <button
+            className="btn btn-primary"
+            disabled={!form.lifestyle.trim()}
+            onClick={onNext}
+          >
+            분석 시작
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+              <path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"/>
+            </svg>
+          </button>
+        </div>
       </div>
     </div>
   );
