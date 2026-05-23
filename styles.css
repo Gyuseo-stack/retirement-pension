@@ -175,6 +175,8 @@ input {
   scroll-behavior: smooth;
   -webkit-overflow-scrolling: touch;
   scroll-padding-bottom: 24px;
+  display: flex;
+  flex-direction: column;
 }
 
 .scroll-body.overlapping {

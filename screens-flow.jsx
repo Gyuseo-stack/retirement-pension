@@ -204,13 +204,9 @@ function Step1({ form, setForm, onNext, onBack }) {
             )}
         </div>
 
+        <div style={{ flex: 1 }}/>
         <div className="cta-bar">
-          <button className="btn btn-secondary" onClick={onBack}>
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
-              <path d="M15 18l-6-6 6-6" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"/>
-            </svg>
-          </button>
-          <button className="btn btn-primary" disabled={!valid} onClick={onNext}>다음</button>
+          <button className="btn btn-primary" style={{ flex: 1 }} disabled={!valid} onClick={onNext}>다음</button>
         </div>
       </div>
     </div>
@@ -278,13 +274,9 @@ function Step2({ form, setForm, onNext, onBack }) {
           />
         </div>
 
+        <div style={{ flex: 1 }}/>
         <div className="cta-bar">
-          <button className="btn btn-secondary" onClick={onBack}>
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
-              <path d="M15 18l-6-6 6-6" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"/>
-            </svg>
-          </button>
-          <button className="btn btn-primary" disabled={!valid} onClick={onNext}>다음</button>
+          <button className="btn btn-primary" style={{ flex: 1 }} disabled={!valid} onClick={onNext}>다음</button>
         </div>
       </div>
     </div>
@@ -401,13 +393,9 @@ function Step3({ form, setForm, onNext, onBack }) {
           </div>
         </div>
 
+        <div style={{ flex: 1 }}/>
         <div className="cta-bar">
-          <button className="btn btn-secondary" onClick={onBack}>
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
-              <path d="M15 18l-6-6 6-6" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"/>
-            </svg>
-          </button>
-          <button className="btn btn-primary" disabled={!valid} onClick={onNext}>
+          <button className="btn btn-primary" style={{ flex: 1 }} disabled={!valid} onClick={onNext}>
             다음
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
               <path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"/>
@@ -422,7 +410,7 @@ function Step3({ form, setForm, onNext, onBack }) {
 // ─────────────────────────────────────────────────────────
 // STEP 4 — Lifestyle (선택 사항)
 // ─────────────────────────────────────────────────────────
-function Step4({ form, setForm, onNext, onBack, onSkip }) {
+function Step4({ form, setForm, onNext, onBack }) {
   return (
     <div className="screen-wrap">
       <StepHeader
@@ -467,19 +455,14 @@ function Step4({ form, setForm, onNext, onBack, onSkip }) {
           작성하지 않아도 기본 점수로 진단해요.
         </div>
 
+        <div style={{ flex: 1 }}/>
         <div className="cta-bar">
-          <button
-            className="btn btn-secondary"
-            onClick={onSkip}
-            style={{ flex: '0 0 80px', whiteSpace: 'nowrap' }}
-          >
-            건너뛰기
+          <button className="btn btn-secondary" onClick={onBack}>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+              <path d="M15 18l-6-6 6-6" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"/>
+            </svg>
           </button>
-          <button
-            className="btn btn-primary"
-            disabled={!form.lifestyle.trim()}
-            onClick={onNext}
-          >
+          <button className="btn btn-primary" onClick={onNext}>
             분석 시작
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
               <path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"/>
