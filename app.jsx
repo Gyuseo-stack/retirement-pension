@@ -94,7 +94,7 @@ function App() {
       {screen === 'step1' && <Step1 form={form} setForm={setForm} onNext={goNext} onBack={goBack}/>}
       {screen === 'step2' && <Step2 form={form} setForm={setForm} onNext={goNext} onBack={goBack}/>}
       {screen === 'step3' && <Step3 form={form} setForm={setForm} onNext={goNext} onBack={goBack}/>}
-      {screen === 'step4' && <Step4 form={form} setForm={setForm} onNext={goNext} onBack={goBack}/>}
+      {screen === 'step4' && <Step4 form={form} setForm={setForm} onNext={goNext} onBack={goBack} onSkip={() => { setForm(f => ({ ...f, textScore: null, structScore: null })); go('loading'); }}/>}
       {screen === 'loading' && <LoadingScreen form={form} setForm={setForm} onNext={() => go('result')}/>}
       {screen === 'result' && <ResultScreen form={form} onRestart={restart} onBack={goBack} portfolioData={portfolioData}/>}
 

@@ -410,7 +410,7 @@ function Step3({ form, setForm, onNext, onBack }) {
 // ─────────────────────────────────────────────────────────
 // STEP 4 — Lifestyle (선택 사항)
 // ─────────────────────────────────────────────────────────
-function Step4({ form, setForm, onNext, onBack }) {
+function Step4({ form, setForm, onNext, onBack, onSkip }) {
   return (
     <div className="screen-wrap">
       <StepHeader
@@ -457,12 +457,18 @@ function Step4({ form, setForm, onNext, onBack }) {
 
         <div style={{ flex: 1 }}/>
         <div className="cta-bar">
-          <button className="btn btn-secondary" onClick={onBack}>
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
-              <path d="M15 18l-6-6 6-6" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"/>
-            </svg>
+          <button
+            className="btn btn-secondary"
+            onClick={onSkip}
+            style={{ flex: '0 0 80px', whiteSpace: 'nowrap' }}
+          >
+            건너뛰기
           </button>
-          <button className="btn btn-primary" onClick={onNext}>
+          <button
+            className="btn btn-primary"
+            disabled={!form.lifestyle.trim()}
+            onClick={onNext}
+          >
             분석 시작
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
               <path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"/>
