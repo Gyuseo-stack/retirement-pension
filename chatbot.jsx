@@ -360,20 +360,6 @@ function ChatModal({ open, onClose, personaContext }) {
 
         {/* 메시지 영역 */}
         <div style={{ flex: 1, overflowY: 'auto', padding: '12px 18px', display: 'flex', flexDirection: 'column', gap: 10 }}>
-          {/* 예시 질문 */}
-          {msgs.length === 0 && (
-            <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
-              <div style={{ fontSize: 11, color: 'var(--text-3)', fontWeight: 600, marginBottom: 2 }}>자주 묻는 질문</div>
-              {exampleQs.map(q => (
-                <button key={q} onClick={() => send(q)} style={{
-                  textAlign: 'left', padding: '9px 13px', borderRadius: 10,
-                  background: 'var(--bg)', border: '1px solid var(--line)',
-                  fontSize: 13, color: 'var(--text)', cursor: 'pointer',
-                  lineHeight: 1.4,
-                }}>{q}</button>
-              ))}
-            </div>
-          )}
 
           {/* 채팅 메시지 */}
           {msgs.map((m, i) => (
@@ -419,6 +405,24 @@ function ChatModal({ open, onClose, personaContext }) {
               ))}
             </div>
           )}
+
+          {/* 예시 질문 — 로딩/스트리밍 중 숨김, 항상 대화 하단에 유지 */}
+          {!loading && !streaming && (
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 6, marginTop: msgs.length > 0 ? 8 : 0 }}>
+              <div style={{ fontSize: 11, color: 'var(--text-3)', fontWeight: 600, marginBottom: 2 }}>
+                {msgs.length === 0 ? '자주 묻는 질문' : '다른 질문 해보기'}
+              </div>
+              {exampleQs.map(q => (
+                <button key={q} onClick={() => send(q)} style={{
+                  textAlign: 'left', padding: '9px 13px', borderRadius: 10,
+                  background: 'var(--bg)', border: '1px solid var(--line)',
+                  fontSize: 13, color: 'var(--text)', cursor: 'pointer',
+                  lineHeight: 1.4,
+                }}>{q}</button>
+              ))}
+            </div>
+          )}
+
           <div ref={bottomRef}/>
         </div>
 
