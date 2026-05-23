@@ -20,6 +20,7 @@ function App() {
     expectedTenure: null,
     lifestyle: '',
     textScore: null,
+    textRaw: null,
     structScore: null,
   });
 
@@ -44,7 +45,7 @@ function App() {
       age: null, horizon: null, dependents: [], amount: null,
       tenure: null, laborRatio: 100,
       salaryMode: 'year', salary: null, jobStab: null, expectedTenure: null,
-      lifestyle: '', textScore: null, structScore: null,
+      lifestyle: '', textScore: null, textRaw: null, structScore: null,
     });
     go('welcome');
   };
@@ -64,6 +65,7 @@ function App() {
       expectedTenure: 20,
       lifestyle: '',
       textScore: null,
+      textRaw: null,
       structScore: null,
     });
   };

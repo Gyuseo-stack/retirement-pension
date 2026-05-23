@@ -111,10 +111,10 @@ function ResultScreen({ form, onRestart, onBack, portfolioData }) {
     scoringLib.calcRiskScore(form, null);
 
   // 최종 riskScore: ML 모델 점수(structScore) 우선 사용, 폴백 시 JS 공식
-  // textScore 있으면 10% 가중 혼합 (JS 공식과 동일 비율)
+  // textRaw(PCA 원시값 ±3 범위)로 ±0.05 보정 적용
   const baseScore = form.structScore ?? formulaScore;
-  const riskScore = form.textScore != null
-    ? +(baseScore * 0.90 + form.textScore * 0.10).toFixed(4)
+  const riskScore = form.textRaw != null
+    ? +Math.max(0, Math.min(1, baseScore + (Math.max(-3, Math.min(3, form.textRaw)) / 3) * 0.05)).toFixed(4)
     : baseScore;
 
   const A = scoringLib.estimateA(riskScore);

@@ -509,7 +509,7 @@ function LoadingScreen({ form, setForm, onNext }) {
             body: JSON.stringify({ text: form.lifestyle }),
           })
             .then(r => r.ok ? r.json() : null)
-            .then(data => { if (data?.score != null) setForm(f => ({ ...f, textScore: data.score })); })
+            .then(data => { if (data?.score != null) setForm(f => ({ ...f, textScore: data.score, textRaw: data.raw ?? null })); })
             .catch(() => {})
         );
       }
