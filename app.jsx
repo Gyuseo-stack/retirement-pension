@@ -99,7 +99,7 @@ function App() {
       {screen === 'result' && <ResultScreen form={form} onRestart={restart} onBack={goBack} portfolioData={portfolioData}/>}
 
       {/* hidden helper: demo fill */}
-      {screen !== 'welcome' && screen !== 'result' && (
+      {screen !== 'welcome' && screen !== 'result' && screen !== 'loading' && (
         <button
           onClick={fillDemo}
           style={{

@@ -184,7 +184,7 @@ function Step1({ form, setForm, onNext, onBack }) {
 
         {/* 1-4 투자자금 */}
         <div className="field-group">
-          <div className="field-label">퇴직연금 누적금 <span className="req">필수</span></div>
+          <div className="field-label">퇴직연금 적립금 <span className="req">필수</span></div>
           <div className={`txt-input`} style={amtErr ? { borderColor: 'var(--red)' } : {}}>
             <input
               type="text"
