@@ -6,9 +6,6 @@
   요청 → stdin에 JSON 1줄  {"text": "..."}
   응답 → stdout에 JSON 1줄 {"score": float, "raw": float}
   모델 로드 완료 시 stdout에 "READY" 출력
-
-Note: LightGBM이 macOS에서 segfault를 일으키는 버그가 있어
-      Ridge 단독으로 추론합니다 (R² ≈ 0.44~0.46, 프로토타입 수준으로 충분).
 """
 import sys, json, re, warnings, os
 warnings.filterwarnings("ignore")
@@ -23,10 +20,15 @@ from sentence_transformers import SentenceTransformer
 MODEL_DIR = Path(__file__).parent / "models"
 
 ridge    = joblib.load(MODEL_DIR / "ridge_model.pkl")
+lgbm     = joblib.load(MODEL_DIR / "lgbm_model.pkl")
 kw_sc    = joblib.load(MODEL_DIR / "keyword_scaler.pkl")
 score_sc = joblib.load(MODEL_DIR / "score_scaler.pkl")
 pca      = joblib.load(MODEL_DIR / "pca.pkl")
 embed    = SentenceTransformer("jhgan/ko-sroberta-multitask")
+
+# 피처별 앙상블 가중치: openness / conscientiousness / stability_preference 순
+W_LGBM  = np.array([0.8, 0.5, 0.2])
+W_RIDGE = np.array([0.2, 0.5, 0.8])
 
 with open(MODEL_DIR / "keyword_meta.json", encoding="utf-8") as f:
     meta = json.load(f)
@@ -44,7 +46,9 @@ def infer(text: str):
     kw_arr    = np.array([[kw_row[c] for c in meta["keyword_feature_cols"]]])
     kw_scaled = kw_sc.transform(kw_arr)
     X         = np.hstack([emb, kw_scaled])
-    pred   = np.clip(ridge.predict(X), 1.0, 5.0)
+    pred_ridge = np.clip(ridge.predict(X), 1.0, 5.0)
+    pred_lgbm  = np.clip(lgbm.predict(X),  1.0, 5.0)
+    pred   = pred_lgbm * W_LGBM + pred_ridge * W_RIDGE
     pred_z = score_sc.transform(pred)
     raw    = -float(pca.transform(pred_z)[0, 0])
     score  = float(1 / (1 + np.exp(-raw)))
