@@ -416,8 +416,7 @@ function ResultScreen({ form, onRestart, onBack, portfolioData }) {
         <div className="cta-helper">
           <div className="icon">!</div>
           <div className="copy">
-            지금처럼 유지하면 30년 뒤 약 <b>{oppCost30y.toLocaleString('ko-KR')}만 원</b>을 더 벌 기회를 놓칩니다.{' '}
-            지금 바로 포트폴리오를 점검해보세요.
+            지금 적립금을 그대로 두면, 30년 뒤 약 <b>{oppCost30y.toLocaleString('ko-KR')}만 원</b>의 차이가 생길 수 있어요.
           </div>
         </div>
       </div>
