@@ -169,13 +169,6 @@ function Root() {
           </IOSDevice>
         </div>
       </div>
-      <div style={{
-        fontSize: 11, color: 'rgba(255,255,255,0.45)', fontWeight: 500,
-        fontFamily: '-apple-system, system-ui, sans-serif', textAlign: 'center', maxWidth: 360,
-      }}>
-        XAI 기반 퇴직연금 포트폴리오 진단 · 페르소나 리스크 스코어 v0.1<br/>
-        Shift+D 키로 데모 데이터를 빠르게 채울 수 있습니다.
-      </div>
     </div>
   );
 }
