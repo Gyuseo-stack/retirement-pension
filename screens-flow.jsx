@@ -446,7 +446,7 @@ function Step4({ form, setForm, onNext, onBack, onSkip }) {
             rows={7}
             style={{
               width: '100%', padding: '14px', borderRadius: 12,
-              border: '1.5px solid var(--line)', fontSize: 13,
+              border: '1.5px solid var(--line)', fontSize: 16,
               lineHeight: 1.6, resize: 'none', color: 'var(--text)',
               background: '#fff', boxSizing: 'border-box',
               fontFamily: 'inherit', outline: 'none',

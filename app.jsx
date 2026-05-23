@@ -136,7 +136,12 @@ function Root() {
   const [st, setSt] = useStateA(getState);
 
   useEffectA(() => {
-    const update = () => setSt(getState());
+    const update = () => setSt(prev => {
+      const next = getState();
+      // On mobile, ignore height-only changes (keyboard open/close) to prevent layout jump
+      if (prev.mobile && next.mobile && next.mobileScale === prev.mobileScale) return prev;
+      return next;
+    });
     window.addEventListener('resize', update);
     window.visualViewport?.addEventListener('resize', update);
     return () => {
