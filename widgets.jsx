@@ -63,31 +63,35 @@ function mapExpectedContribution(expectedTenure) {
 
 function mapIncomeLevel(salary) {
   const s = salary ?? 0;
-  if (s >= 10000) return '매우 높음';
-  if (s >= 6000)  return '높음';
-  if (s >= 3000)  return '중간';
+  if (s >= 8000) return '매우 높음';
+  if (s >= 5000) return '높음';
+  if (s >= 3000) return '중간';
   return '낮음';
 }
 
 // ── 자금 여력 Part 1: Capital/Career Capacity ────────────
-// 노트북 calculate_capital_career_capacity_score() 실제 구현 기준
+// 노트북 calculate_capital_career_capacity_score() 수정본 기준
 function calcCapitalScore(investable_capital, years_worked, years_to_retire, income_dependency) {
-  // 1. 현재 여유 투자자금 점수 (0~10)
+  // 1. 현재 여유 투자자금 점수 (0~10) — 6단계 세분화 (단위: 만원)
   const ic = investable_capital ?? 0;
-  const capitalScore = ic >= 1000 ? 10 : ic >= 500 ? 7 : ic >= 100 ? 4 : 1;
+  const capitalScore = ic >= 10000 ? 10
+                     : ic >= 5000  ? 8
+                     : ic >= 3000  ? 6
+                     : ic >= 1500  ? 4
+                     : ic >= 500   ? 2 : 1;
 
-  // 2. 커리어 잔여 여력 점수 (0~10) — 남은 기간이 길수록 고점
-  const careerRemaining = (years_to_retire ?? 0) - (years_worked ?? 0);
+  // 2. 커리어 잔여 여력 점수 (0~10) — years_to_retire 직접 사용 (버그 수정)
+  const careerRemaining = years_to_retire ?? 0;
   const careerScore = careerRemaining >= 30 ? 10
                     : careerRemaining >= 20 ? 8
                     : careerRemaining >= 10 ? 5
                     : careerRemaining >= 5  ? 3 : 1;
 
-  // 3. 근로소득 의존도 점수 (0~10) — 의존도 낮을수록 고점
+  // 3. 근로소득 의존도 점수 (0~10) — 의존도 낮을수록 고점 (Bodie-Merton-Samuelson)
   const depMap = {
-    '매우 높음: 소득의 80% 이상이 근로소득': 1,
-    '높음: 소득의 60~80%가 근로소득':        3,
-    '보통: 소득의 40~60%가 근로소득':        6,
+    '매우 높음: 소득의 80% 이상이 근로소득': 3,
+    '높음: 소득의 60~80%가 근로소득':        5,
+    '보통: 소득의 40~60%가 근로소득':        7,
     '낮음: 소득의 40% 미만이 근로소득':      9,
   };
   const depScore = depMap[income_dependency] ?? 5;
