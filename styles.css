@@ -494,14 +494,14 @@ input {
   background: linear-gradient(160deg, #DCEEFF 0%, #6BB0FF 50%, #1A6FE8 100%);
   display: flex;
   flex-direction: column;
-  padding: 52px 24px 32px;
+  padding: 44px 24px 32px;
   color: #fff;
   overflow: hidden;
 }
 .welcome-illust {
   flex: 1 1 0;
   min-height: 0;
-  max-height: 220px;
+  max-height: 200px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -512,14 +512,14 @@ input {
   font-weight: 800;
   line-height: 1.2;
   letter-spacing: -0.02em;
-  margin: 0 0 12px;
+  margin: 0 0 10px;
   text-wrap: balance;
 }
 .welcome p {
   font-size: 15px;
   line-height: 1.6;
   color: rgba(255,255,255,0.85);
-  margin: 0 0 24px;
+  margin: 0 0 16px;
 }
 .welcome .badge {
   display: inline-flex;
@@ -556,6 +556,7 @@ input {
   gap: 8px;
   box-shadow: 0 8px 28px rgba(0,0,0,0.18);
   transition: transform 150ms;
+  margin-top: 24px;
 }
 .welcome .start-btn:active { transform: scale(0.98); }
 
@@ -857,7 +858,7 @@ input {
   display: flex;
   flex-direction: column;
   gap: 10px;
-  margin: 20px 0 28px;
+  margin: 16px 0 0;
 }
 .welcome-feat {
   display: flex;
