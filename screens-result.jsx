@@ -122,7 +122,7 @@ function ResultScreen({ form, onRestart, onBack, portfolioData }) {
 
   // y* — 개인 A값을 CAL 공식에 직접 대입 (연속값)
   // y* = cal_ratio / A, 법적 상한 70% 적용
-  const calRatio = portfolioData?.cal_ratio ?? 1.9236;
+  const calRatio = portfolioData?.cal_ratio ?? 2.1673;
   const yStar = +Math.min(calRatio / A, 0.70).toFixed(4);
 
   // CVaR·Sortino — 초기값은 5포인트 보간, API 응답 후 실제 역사적 시뮬레이션 값으로 교체
@@ -307,10 +307,17 @@ function ResultScreen({ form, onRestart, onBack, portfolioData }) {
           <div style={{ fontSize: 11, fontWeight: 700, color: 'var(--text-3)', marginBottom: 6, letterSpacing: '0.05em' }}>주요 투자 종목</div>
           <div className="legend-list" style={{ marginBottom: 0 }}>
             {[...slices].sort((a, b) => b.weight - a.weight).slice(0, 3).map((s) => (
-              <div key={s.name} className="legend-row">
-                <span className="legend-dot" style={{ background: SLOT_GROUP_COLORS[s.name] ?? s.color }}/>
-                <span className="legend-name">{formatSlotName(s.name)}</span>
-                <span className="legend-pct">{(s.weight * 100).toFixed(1)}%</span>
+              <div key={s.name} style={{ marginBottom: 6 }}>
+                <div className="legend-row" style={{ marginBottom: s.reason ? 2 : 0 }}>
+                  <span className="legend-dot" style={{ background: SLOT_GROUP_COLORS[s.name] ?? s.color }}/>
+                  <span className="legend-name">{formatSlotName(s.name)}</span>
+                  <span className="legend-pct">{(s.weight * 100).toFixed(1)}%</span>
+                </div>
+                {s.reason && (
+                  <div style={{ paddingLeft: 18, fontSize: 11, color: 'var(--text-3)', lineHeight: 1.4 }}>
+                    {s.reason}
+                  </div>
+                )}
               </div>
             ))}
           </div>
@@ -328,10 +335,17 @@ function ResultScreen({ form, onRestart, onBack, portfolioData }) {
           {showAll && (
             <div className="legend-list" style={{ marginTop: 6 }}>
               {[...slices].sort((a, b) => b.weight - a.weight).map((s) => (
-                <div key={s.name} className="legend-row" style={{ opacity: s.weight < 0.01 ? 0.4 : 1 }}>
-                  <span className="legend-dot" style={{ background: SLOT_GROUP_COLORS[s.name] ?? s.color }}/>
-                  <span className="legend-name">{formatSlotName(s.name)}</span>
-                  <span className="legend-pct">{(s.weight * 100).toFixed(1)}%</span>
+                <div key={s.name} style={{ marginBottom: 8, opacity: s.weight < 0.015 ? 0.5 : 1 }}>
+                  <div className="legend-row" style={{ marginBottom: s.reason ? 2 : 0 }}>
+                    <span className="legend-dot" style={{ background: SLOT_GROUP_COLORS[s.name] ?? s.color }}/>
+                    <span className="legend-name">{formatSlotName(s.name)}</span>
+                    <span className="legend-pct">{(s.weight * 100).toFixed(1)}%</span>
+                  </div>
+                  {s.reason && (
+                    <div style={{ paddingLeft: 18, fontSize: 11, color: 'var(--text-3)', lineHeight: 1.4 }}>
+                      {s.reason}
+                    </div>
+                  )}
                 </div>
               ))}
             </div>
@@ -440,6 +454,7 @@ function ResultScreen({ form, onRestart, onBack, portfolioData }) {
         riskScore, timeScore, capitalScore, jobScore, familyScore,
         cvar95, cvar99, sortino,
         shap, slices,
+        slotsAttribution: portfolioData?.slots ?? [],
       }} />
     </div>
   );

@@ -131,7 +131,7 @@ const EXAMPLE_QS = {
 function buildPersonaContext(ctx) {
   if (!ctx) return '';
   const { persona, A, yStar, riskScore, timeScore, capitalScore, jobScore, familyScore,
-          cvar95, cvar99, sortino, shap, slices } = ctx;
+          cvar95, cvar99, sortino, shap, slices, slotsAttribution } = ctx;
 
   const pct  = (v) => `${Math.round((v ?? 0) * 100)}%`;
   const f1   = (v) => (v != null) ? v.toFixed(1) : '-';
@@ -144,6 +144,15 @@ function buildPersonaContext(ctx) {
 
   const shapLines = (shap || []).slice(0, 4)
     .map((s) => `- ${s.var}: ${s.impact >= 0 ? '+' : ''}${f1(s.impact)}%p`).join('\n');
+
+  // 슬롯별 편입 근거 (attribution 데이터 있는 슬롯만, 비중 내림차순)
+  const attrLines = (slotsAttribution || [])
+    .filter((s) => s.kind !== 'rf' && s.implied_return_pct != null)
+    .sort((a, b) => b.weight - a.weight)
+    .map((s) => {
+      const userW = (s.weight * yStar).toFixed(1);
+      return `- ${s.name}: 전체 적립���의 ${(s.weight * (yStar ?? 0) * 100).toFixed(1)}% (위험포트 내 ${Math.round(s.weight * 100)}%) | 기대수익률 ${s.implied_return_pct}%/분기 | 리스크기여 ${s.risk_contrib_pct}% | ${s.constraint} — ${s.reason}`;
+    }).join('\n');
 
   return `
 ============================================================
@@ -170,10 +179,16 @@ ${shapLines}
 
 ■ 포트폴리오 주요 구성 (상위 5개, 전체 적립금 기준)
 ${topSlices}
+
+■ 각 종목이 이 비중으로 편입된 이유 (Sortino 최적화 + Black-Litterman 기반)
+   아래 데이터를 참고해 "왜 나스닥이 많이 들어갔나요?", "채권은 왜 적나요?" 같은 질문에 답하세요.
+   기대수익률(π)은 BL 모델이 시장 AUM에서 역산한 암묵적 수익률(분기 기준)이며,
+   리스크기여는 해당 종목이 포트폴리오 전체 하방 위험에서 차지하는 비율입니다.
+${attrLines}
 ============================================================
 위 수치는 현재 사용자의 실제 진단 결과입니다.
 질문에 답할 때 수치만 나열하지 말고, 그 수치가 이 사용자에게 어떤 의미인지 일상적인 언어로 설명하세요.
-"내 위험자산이 왜 이 비중이에요?", "최악의 달 손실이 얼마예요?", "왜 이 페르소나가 됐나요?" 같은 질문에 위 데이터를 직접 인용하여 구체적으로 설명하세요.
+"내 위험자산이 왜 이 비중이에요?", "왜 나스닥/코스닥이 많이 들어갔나요?", "채권은 왜 조금 담겼나요?" 같은 질문에 위 데이터를 직접 인용하여 구체적으로 설명하세요.
 제도 Q&A 탭에서도 이 사용자의 상황(페르소나·소득·리스크)에 맞게 예시를 제시하세요.
 `;
 }
@@ -265,12 +280,16 @@ function ChatModal({ open, onClose, personaContext }) {
   // ※ 훅은 반드시 early return 전에 호출해야 함
   const exampleQs = useMemoC(() => {
     if (tab === '포트폴리오' && personaContext?.yStar != null) {
-      const { persona, yStar, cvar99 } = personaContext;
+      const { yStar, cvar99, slotsAttribution } = personaContext;
+      const topSlot = (slotsAttribution || [])
+        .filter((s) => s.kind !== 'rf' && s.implied_return_pct != null)
+        .sort((a, b) => b.weight - a.weight)[0];
+      const topName = topSlot ? topSlot.name.replace('미국주식_', '').replace('국내주식_', '') : '나스닥';
       return [
         `왜 내 주식 비중이 ${Math.round(yStar * 100)}%로 정해졌나요?`,
         `최악의 달에 ${Math.abs(cvar99 ?? 0).toFixed(1)}% 손실이 날 수 있다는 게 어느 정도예요?`,
-        `나는 어떤 투자 성향인가요?`,
-        '내 포트폴리오에서 가장 비중이 큰 자산은 뭔가요?',
+        `왜 ${topName}이 가장 많이 담겼나요?`,
+        '채권은 왜 이렇게 적게 들어갔나요?',
       ];
     }
     return EXAMPLE_QS[tab];

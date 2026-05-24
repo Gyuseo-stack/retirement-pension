@@ -6,73 +6,121 @@
       "name": "국내주식_코스피",
       "weight": 0.01,
       "color": "#00C48C",
-      "kind": "risky"
+      "kind": "risky",
+      "implied_return_pct": 0.484,
+      "risk_contrib_pct": 0.8,
+      "constraint": "하한(1%)",
+      "reason": "기대수익률 중위권(5위/전체 12개)이지만 상위 종목들이 이미 비중을 선점해 최소 비중(1%) 배분"
     },
     {
       "name": "국내주식_코스닥",
       "weight": 0.25,
       "color": "#34D399",
-      "kind": "risky"
+      "kind": "risky",
+      "implied_return_pct": 0.591,
+      "risk_contrib_pct": 28.4,
+      "constraint": "상한(25%)",
+      "reason": "기대수익률 상위 3위 — 최적화가 최대한 담으려 해 상한(25%) 도달"
     },
     {
       "name": "미국주식_SP500",
       "weight": 0.25,
       "color": "#1A6FE8",
-      "kind": "risky"
+      "kind": "risky",
+      "implied_return_pct": 0.903,
+      "risk_contrib_pct": 24.0,
+      "constraint": "상한(25%)",
+      "reason": "기대수익률 상위 2위 — 최적화가 최대한 담으려 해 상한(25%) 도달"
     },
     {
       "name": "미국주식_나스닥",
       "weight": 0.25,
       "color": "#4B9EFF",
-      "kind": "risky"
+      "kind": "risky",
+      "implied_return_pct": 1.099,
+      "risk_contrib_pct": 29.7,
+      "constraint": "상한(25%)",
+      "reason": "기대수익률 상위 1위 — 최적화가 최대한 담으려 해 상한(25%) 도달"
     },
     {
       "name": "신흥국_인도",
       "weight": 0.01,
       "color": "#7B61FF",
-      "kind": "risky"
+      "kind": "risky",
+      "implied_return_pct": 0.482,
+      "risk_contrib_pct": 0.7,
+      "constraint": "하한(1%)",
+      "reason": "기대수익률 중위권(6위/전체 12개)이지만 상위 종목들이 이미 비중을 선점해 최소 비중(1%) 배분"
     },
     {
       "name": "신흥국_중국",
       "weight": 0.16,
       "color": "#9B80FF",
-      "kind": "risky"
+      "kind": "risky",
+      "implied_return_pct": 0.565,
+      "risk_contrib_pct": 15.4,
+      "constraint": "자유 최적화",
+      "reason": "기대수익률과 분산 효과 균형으로 16%가 Sortino 최적 비중"
     },
     {
       "name": "국내채권_국고채단중기",
       "weight": 0.01,
       "color": "#FFB020",
-      "kind": "risky"
+      "kind": "risky",
+      "implied_return_pct": 0.038,
+      "risk_contrib_pct": 0.1,
+      "constraint": "하한(1%)",
+      "reason": "기대수익률 하위권(10위/전체 12개) — 분기 0.038% 수준으로 최소 비중(1%) 유지"
     },
     {
       "name": "국내채권_국고채장기",
       "weight": 0.01,
       "color": "#FFD166",
-      "kind": "risky"
+      "kind": "risky",
+      "implied_return_pct": 0.209,
+      "risk_contrib_pct": 0.3,
+      "constraint": "하한(1%)",
+      "reason": "기대수익률 하위권(8위/전체 12개) — 분기 0.209% 수준으로 최소 비중(1%) 유지"
     },
     {
       "name": "국내채권_회사채",
       "weight": 0.01,
       "color": "#FF6B35",
-      "kind": "risky"
+      "kind": "risky",
+      "implied_return_pct": 0.034,
+      "risk_contrib_pct": 0.0,
+      "constraint": "하한(1%)",
+      "reason": "기대수익률 하위권(11위/전체 12개) — 분기 0.034% 수준으로 최소 비중(1%) 유지"
     },
     {
       "name": "국내채권_종합",
       "weight": 0.01,
       "color": "#FF9F6B",
-      "kind": "risky"
+      "kind": "risky",
+      "implied_return_pct": 0.074,
+      "risk_contrib_pct": 0.1,
+      "constraint": "하한(1%)",
+      "reason": "기대수익률 하위권(9위/전체 12개) — 분기 0.074% 수준으로 최소 비중(1%) 유지"
     },
     {
       "name": "해외채권_미국국채",
       "weight": 0.01,
       "color": "#06D6A0",
-      "kind": "risky"
+      "kind": "risky",
+      "implied_return_pct": 0.002,
+      "risk_contrib_pct": 0.0,
+      "constraint": "하한(1%)",
+      "reason": "기대수익률 하위권(12위/전체 12개) — 분기 0.002% 수준으로 최소 비중(1%) 유지"
     },
     {
       "name": "원자재_금",
       "weight": 0.01,
       "color": "#F4A261",
-      "kind": "risky"
+      "kind": "risky",
+      "implied_return_pct": 0.337,
+      "risk_contrib_pct": 0.4,
+      "constraint": "하한(1%)",
+      "reason": "기대수익률 하위권(7위/전체 12개) — 분기 0.337% 수준으로 최소 비중(1%) 유지"
     },
     {
       "name": "무위험(현금성)",
