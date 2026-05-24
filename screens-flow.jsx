@@ -43,13 +43,6 @@ function WelcomeScreen({ onStart }) {
         <div style={{ width: 140, height: 140, borderRadius: '50%', background: '#fff' }}/>
       </div>
 
-      <div style={{ position: 'relative', zIndex: 2, marginTop: 8 }}>
-        <div className="badge">
-          <span style={{ width: 6, height: 6, borderRadius: 99, background: '#FFD66B' }}/>
-          XAI 기반 포트폴리오 진단 · 약 3분
-        </div>
-      </div>
-
       <div className="welcome-illust">
         <div style={{ transform: 'translateY(-10px)' }}>
           <IsoStack size={240} theme="welcome"/>
