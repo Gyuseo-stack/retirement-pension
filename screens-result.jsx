@@ -392,6 +392,7 @@ function ResultScreen({ form, onRestart, onBack, portfolioData }) {
                 {[...slices]
                   .filter((s) => s.reason)
                   .sort((a, b) => b.weight - a.weight)
+                  .slice(0, 5)
                   .map((s) => (
                     <div key={s.name} style={{ display: 'flex', gap: 10, alignItems: 'flex-start' }}>
                       <span style={{
