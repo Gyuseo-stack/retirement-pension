@@ -1,5 +1,6 @@
 {
   "last_rebalance": "2025-01-16",
+  "cal_ratio": 2.1673,
   "slots": [
     {
       "name": "국내주식_코스피",
@@ -9,19 +10,19 @@
     },
     {
       "name": "국내주식_코스닥",
-      "weight": 0.2451,
+      "weight": 0.25,
       "color": "#34D399",
       "kind": "risky"
     },
     {
       "name": "미국주식_SP500",
-      "weight": 0.1,
+      "weight": 0.25,
       "color": "#1A6FE8",
       "kind": "risky"
     },
     {
       "name": "미국주식_나스닥",
-      "weight": 0.4,
+      "weight": 0.25,
       "color": "#4B9EFF",
       "kind": "risky"
     },
@@ -33,7 +34,7 @@
     },
     {
       "name": "신흥국_중국",
-      "weight": 0.1649,
+      "weight": 0.16,
       "color": "#9B80FF",
       "kind": "risky"
     },
@@ -80,37 +81,36 @@
       "kind": "rf"
     }
   ],
-  "cal_ratio": 1.9236,
   "personas": {
     "early": {
       "y_star": 0.7,
-      "cvar95": -6.67,
-      "cvar99": -7.43,
-      "sortino": 0.196
+      "cvar95": -5.78,
+      "cvar99": -8.04,
+      "sortino": 0.284
     },
     "accum": {
       "y_star": 0.7,
-      "cvar95": -6.67,
-      "cvar99": -7.43,
-      "sortino": 0.196
+      "cvar95": -5.78,
+      "cvar99": -8.04,
+      "sortino": 0.284
     },
     "family": {
-      "y_star": 0.5496,
-      "cvar95": -5.1,
-      "cvar99": -5.7,
-      "sortino": 0.195
+      "y_star": 0.6192,
+      "cvar95": -5.09,
+      "cvar99": -7.1,
+      "sortino": 0.295
     },
     "retire": {
-      "y_star": 0.3847,
-      "cvar95": -3.37,
-      "cvar99": -3.81,
-      "sortino": 0.192
+      "y_star": 0.4334,
+      "cvar95": -3.5,
+      "cvar99": -4.93,
+      "sortino": 0.336
     },
     "senior": {
-      "y_star": 0.2748,
-      "cvar95": -2.22,
-      "cvar99": -2.53,
-      "sortino": 0.188
+      "y_star": 0.3096,
+      "cvar95": -2.45,
+      "cvar99": -3.49,
+      "sortino": 0.391
     }
   }
 }
