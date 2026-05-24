@@ -280,8 +280,13 @@ function ResultScreen({ form, onRestart, onBack, portfolioData }) {
               { key: 'stock', label: '주식',    color: '#4B9EFF' },
               { key: 'bond',  label: '채권',    color: '#00C48C' },
               { key: 'other', label: '안전·기타', color: '#B0BAD4' },
-            ].map(({ key, label, color }) => {
-              const total = slices.filter((s) => getSlotGroup(s.name) === key).reduce((sum, s) => sum + s.weight, 0);
+            ].map(({ key, label, color }) => ({
+              key, label, color,
+              total: slices.filter((s) => getSlotGroup(s.name) === key).reduce((sum, s) => sum + s.weight, 0),
+            }))
+            .filter(({ total }) => total >= 0.001)
+            .sort((a, b) => b.total - a.total)
+            .map(({ key, label, color, total }) => {
               if (total < 0.001) return null;
               return (
                 <div key={key} style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
