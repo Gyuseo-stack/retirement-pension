@@ -58,21 +58,21 @@ function WelcomeScreen({ onStart }) {
 
       <div style={{ position: 'relative', zIndex: 2 }}>
         <h1>퇴직연금,<br/>방치 말고 진단부터</h1>
-        <p>5가지 정보로 페르소나 리스크 스코어를 계산해<br/>참고용 포트폴리오 분석 정보를 확인할 수 있습니다.</p>
+        <p>몇 가지 정보만 입력하면, 내 상황에 맞는<br/>퇴직연금 포트폴리오를 바로 확인할 수 있어요</p>
 
         <div className="welcome-features">
           <div className="welcome-feat">
             <div className="icon">📊</div>
             <div>
-              <div className="t">포트폴리오 구성 이유, 한눈에 봐요</div>
-              <div className="d">각 자산을 왜 담았는지 시각적으로 보여주세요</div>
+              <div className="t">왜 이 포트폴리오인지 설명해드려요</div>
+              <div className="d">AI가 추천한 이유를 한눈에 확인하세요</div>
             </div>
           </div>
           <div className="welcome-feat">
             <div className="icon">⚖️</div>
             <div>
-              <div className="t">방치하면 얼마나 손해일까요?</div>
-              <div className="d">30년 복리 시뮬레이션으로 기회비용을 계산해요</div>
+              <div className="t">내 퇴직금, 지금 잠들어 있지 않나요?</div>
+              <div className="d">30년 뒤 얼마나 달라지는지 바로 확인해보세요</div>
             </div>
           </div>
         </div>
