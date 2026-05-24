@@ -49,7 +49,7 @@ function WelcomeScreen({ onStart }) {
         </div>
       </div>
 
-      <div style={{ position: 'relative', zIndex: 2 }}>
+      <div style={{ position: 'relative', zIndex: 2, marginTop: -20 }}>
         <h1>퇴직연금,<br/>방치 말고 진단부터</h1>
         <p>몇 가지 정보만 입력하면, 내 상황에 맞는<br/>퇴직연금 포트폴리오를 바로 확인할 수 있어요</p>
 
