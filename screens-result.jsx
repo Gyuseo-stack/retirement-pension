@@ -384,29 +384,28 @@ function ResultScreen({ form, onRestart, onBack, portfolioData }) {
             <HelpTip>CVaR: 과거 수익률 분포에서 최악의 5%·1% 구간 평균 손실 (월 기준)</HelpTip>
           </div>
           <div className="result-card-sub" style={{ display: 'flex', alignItems: 'center', gap: 6, flexWrap: 'wrap' }}>
-            <span>역사적 시뮬레이션 (2016~2025, {riskMetrics.n_months ?? 112}개월)</span>
-            {cvarExact
-              ? <span style={{ fontSize: 10, fontWeight: 700, padding: '2px 7px', borderRadius: 99, background: '#E8F9F2', color: '#00875A' }}>✦ 개인 y* 정밀 계산</span>
-              : <span style={{ fontSize: 10, fontWeight: 700, padding: '2px 7px', borderRadius: 99, background: '#F5F6FA', color: '#8896B3' }}>추정값 (계산 중…)</span>
-            }
+            <span>과거 데이터 기반 (2016~2025, {riskMetrics.n_months ?? 112}개월)</span>
+            {!cvarExact && (
+              <span style={{ fontSize: 10, fontWeight: 700, padding: '2px 7px', borderRadius: 99, background: '#F5F6FA', color: '#8896B3' }}>계산 중…</span>
+            )}
           </div>
           <div style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
             <div className="cvar-row">
-              <div className="lbl">일반적 나쁜 달의 평균 손실 (월 CVaR 95%)</div>
+              <div className="lbl">나쁜 달 평균 손실 <span style={{ fontSize: 10, color: 'var(--text-3)' }}>(100번 중 5번 수준)</span></div>
               <div className="val neg">{cvar95.toFixed(1)}%</div>
             </div>
             <div style={{ fontSize: 11, color: '#A03A3A', padding: '2px 0 8px', lineHeight: 1.5 }}>
-              100번 중 5번 있는 나쁜 달에 평균 <b>{Math.abs(cvar95).toFixed(1)}%</b> 손실이 예상됩니다.
+              시장이 나쁜 달에는 평균 <b>{Math.abs(cvar95).toFixed(1)}%</b> 손실이 예상됩니다.
             </div>
             <div className="cvar-row">
-              <div className="lbl">극단적 달의 평균 손실 (월 CVaR 99%)</div>
+              <div className="lbl">최악의 달 평균 손실 <span style={{ fontSize: 10, color: 'var(--text-3)' }}>(100번 중 1번 수준)</span></div>
               <div className="val neg">{cvar99.toFixed(1)}%</div>
             </div>
             <div style={{ fontSize: 11, color: '#A03A3A', padding: '2px 0 8px', lineHeight: 1.5 }}>
-              100번 중 1번 있는 극단적 달에 평균 <b>{Math.abs(cvar99).toFixed(1)}%</b> 손실이 예상됩니다.
+              극단적으로 나쁜 달에는 평균 <b>{Math.abs(cvar99).toFixed(1)}%</b> 손실이 예상됩니다.
             </div>
             <div className="cvar-row">
-              <div className="lbl">한 달 최대 손실 금액 (CVaR 99%)</div>
+              <div className="lbl">최악의 달 예상 손실 금액</div>
               <div className="val neg">{maxLossWon.toLocaleString('ko-KR')}만 원</div>
             </div>
           </div>
