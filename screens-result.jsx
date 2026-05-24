@@ -307,17 +307,10 @@ function ResultScreen({ form, onRestart, onBack, portfolioData }) {
           <div style={{ fontSize: 11, fontWeight: 700, color: 'var(--text-3)', marginBottom: 6, letterSpacing: '0.05em' }}>주요 투자 종목</div>
           <div className="legend-list" style={{ marginBottom: 0 }}>
             {[...slices].sort((a, b) => b.weight - a.weight).slice(0, 3).map((s) => (
-              <div key={s.name} style={{ marginBottom: 6 }}>
-                <div className="legend-row" style={{ marginBottom: s.reason ? 2 : 0 }}>
-                  <span className="legend-dot" style={{ background: SLOT_GROUP_COLORS[s.name] ?? s.color }}/>
-                  <span className="legend-name">{formatSlotName(s.name)}</span>
-                  <span className="legend-pct">{(s.weight * 100).toFixed(1)}%</span>
-                </div>
-                {s.reason && (
-                  <div style={{ paddingLeft: 18, fontSize: 11, color: 'var(--text-3)', lineHeight: 1.4 }}>
-                    {s.reason}
-                  </div>
-                )}
+              <div key={s.name} className="legend-row">
+                <span className="legend-dot" style={{ background: SLOT_GROUP_COLORS[s.name] ?? s.color }}/>
+                <span className="legend-name">{formatSlotName(s.name)}</span>
+                <span className="legend-pct">{(s.weight * 100).toFixed(1)}%</span>
               </div>
             ))}
           </div>
@@ -335,17 +328,10 @@ function ResultScreen({ form, onRestart, onBack, portfolioData }) {
           {showAll && (
             <div className="legend-list" style={{ marginTop: 6 }}>
               {[...slices].sort((a, b) => b.weight - a.weight).map((s) => (
-                <div key={s.name} style={{ marginBottom: 8, opacity: s.weight < 0.015 ? 0.5 : 1 }}>
-                  <div className="legend-row" style={{ marginBottom: s.reason ? 2 : 0 }}>
-                    <span className="legend-dot" style={{ background: SLOT_GROUP_COLORS[s.name] ?? s.color }}/>
-                    <span className="legend-name">{formatSlotName(s.name)}</span>
-                    <span className="legend-pct">{(s.weight * 100).toFixed(1)}%</span>
-                  </div>
-                  {s.reason && (
-                    <div style={{ paddingLeft: 18, fontSize: 11, color: 'var(--text-3)', lineHeight: 1.4 }}>
-                      {s.reason}
-                    </div>
-                  )}
+                <div key={s.name} className="legend-row" style={{ opacity: s.weight < 0.01 ? 0.4 : 1 }}>
+                  <span className="legend-dot" style={{ background: SLOT_GROUP_COLORS[s.name] ?? s.color }}/>
+                  <span className="legend-name">{formatSlotName(s.name)}</span>
+                  <span className="legend-pct">{(s.weight * 100).toFixed(1)}%</span>
                 </div>
               ))}
             </div>
@@ -361,10 +347,12 @@ function ResultScreen({ form, onRestart, onBack, portfolioData }) {
               fontWeight: 800,
             }}>XAI</span> 비중 결정 이유
           </div>
-          <div className="result-card-sub">각 요소가 나의 투자 성향 점수에 기여한 정도</div>
+
+          {/* SHAP — 위험자산 비중(y*) 결정 요인 */}
+          <div className="result-card-sub" style={{ marginBottom: 10 }}>내 위험자산 비중(y*)에 기여한 요소</div>
           <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
             {shap.map((s) => {
-              const pct = Math.min(Math.abs(s.impact) * 4, 50); // max 50% half-bar (max delta=15 → 60%, capped)
+              const pct = Math.min(Math.abs(s.impact) * 4, 50);
               const sign = s.impact >= 0 ? '+' : '';
               return (
                 <div key={s.var} style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
@@ -394,6 +382,40 @@ function ResultScreen({ form, onRestart, onBack, portfolioData }) {
               );
             })}
           </div>
+
+          {/* 종목 편입 근거 */}
+          {slices.some((s) => s.reason) && (
+            <>
+              <div style={{ height: 1, background: 'var(--border)', margin: '18px 0 14px' }}/>
+              <div className="result-card-sub" style={{ marginBottom: 10 }}>각 종목이 이 비중으로 담긴 이유</div>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+                {[...slices]
+                  .filter((s) => s.reason)
+                  .sort((a, b) => b.weight - a.weight)
+                  .map((s) => (
+                    <div key={s.name} style={{ display: 'flex', gap: 10, alignItems: 'flex-start' }}>
+                      <span style={{
+                        width: 8, height: 8, borderRadius: '50%', flexShrink: 0, marginTop: 5,
+                        background: SLOT_GROUP_COLORS[s.name] ?? s.color,
+                      }}/>
+                      <div style={{ flex: 1, minWidth: 0 }}>
+                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', gap: 6 }}>
+                          <span style={{ fontSize: 13, fontWeight: 600, color: 'var(--text)' }}>
+                            {formatSlotName(s.name)}
+                          </span>
+                          <span style={{ fontSize: 13, fontWeight: 700, color: 'var(--text)', flexShrink: 0, fontVariantNumeric: 'tabular-nums' }}>
+                            {(s.weight * 100).toFixed(1)}%
+                          </span>
+                        </div>
+                        <div style={{ fontSize: 11, color: 'var(--text-3)', marginTop: 2, lineHeight: 1.5 }}>
+                          {s.reason}
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+              </div>
+            </>
+          )}
         </div>
 
         {/* CVaR */}
