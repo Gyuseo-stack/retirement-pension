@@ -30,7 +30,7 @@ load_dotenv()
 _risky_port_r: "pd.Series | None" = None   # 리스크 포트폴리오 월 수익률
 _rf_r:         "pd.Series | None" = None   # 무위험 자산 월 수익률
 
-DATA_DIR      = Path(__file__).parent.parent / "최종_데이터셋"
+DATA_DIR      = Path(__file__).parent.parent.parent / "최종_데이터셋"
 CVAR_JSON     = Path(__file__).parent / "cvar_returns.json"
 
 def _load_return_data() -> None:
@@ -301,4 +301,4 @@ def health():
 
 
 # API 라우트 등록 후 맨 마지막에 정적 파일 서빙
-app.mount("/", StaticFiles(directory=Path(__file__).parent, html=True), name="static")
+app.mount("/", StaticFiles(directory=Path(__file__).parent.parent / "frontend", html=True), name="static")

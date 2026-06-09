@@ -53,32 +53,38 @@
 
 ```
 .
-├── index.html                  # 앱 진입점 (React CDN 로드)
-├── app.jsx                     # 메인 앱 (라우팅·상태 관리)
-├── screens-flow.jsx            # Welcome + STEP 1/2/3 화면
-├── screens-result.jsx          # 추천 결과 화면 (포트폴리오·XAI)
-├── chatbot.jsx                 # AI 챗봇 컴포넌트
-├── ios-frame.jsx               # iOS 스타일 프레임 컴포넌트
-├── widgets.jsx                 # 공통 위젯 (슬라이더, 카드 등)
-├── styles.css                  # 전체 스타일
-├── api_server.py               # FastAPI 백엔드 서버
-├── persona_infer.py            # 텍스트 추론 워커 (서브프로세스)
-├── struct_infer.py             # 정형 변수 추론 워커 (서브프로세스)
-├── train_struct_model.py       # 정형 모델 학습 스크립트
-├── portfolio_data.json         # 포트폴리오 최적화 결과 데이터
-├── cvar_returns.json           # 사전 계산된 CVaR 수익률 데이터
-├── manifest.json               # 웹 앱 매니페스트 (PWA)
-├── Procfile                    # Railway 배포 설정
-├── requirements.txt            # Python 의존성
-├── models/                     # 학습된 모델 파일
-│   ├── ridge_model.pkl
-│   ├── lgbm_model.pkl
-│   ├── struct_model.pkl
-│   ├── pca.pkl
-│   ├── keyword_scaler.pkl
-│   ├── score_scaler.pkl
-│   └── keyword_meta.json
-└── screenshots/                # UI 스크린샷
+├── Procfile                        # Railway 배포 설정
+├── runtime.txt                     # Python 버전 명시
+├── requirements.txt                # Python 의존성
+│
+├── backend/                        # 서버 & ML
+│   ├── api_server.py               # FastAPI 서버 (챗봇·추론·CVaR 엔드포인트)
+│   ├── persona_infer.py            # 텍스트 추론 워커 (서브프로세스)
+│   ├── struct_infer.py             # 정형 변수 추론 워커 (서브프로세스)
+│   ├── train_struct_model.py       # 정형 모델 학습 스크립트
+│   ├── cvar_returns.json           # 사전 계산된 CVaR 수익률 데이터
+│   └── models/                     # 학습된 모델 파일
+│       ├── ridge_model.pkl
+│       ├── lgbm_model.pkl
+│       ├── struct_model.pkl
+│       ├── pca.pkl
+│       ├── keyword_scaler.pkl
+│       ├── score_scaler.pkl
+│       └── keyword_meta.json
+│
+├── frontend/                       # 웹 UI (정적 파일)
+│   ├── index.html                  # 앱 진입점 (React CDN 로드)
+│   ├── app.jsx                     # 메인 앱 (라우팅·상태 관리)
+│   ├── screens-flow.jsx            # Welcome + STEP 1/2/3 화면
+│   ├── screens-result.jsx          # 추천 결과 화면 (포트폴리오·XAI)
+│   ├── chatbot.jsx                 # AI 챗봇 컴포넌트
+│   ├── ios-frame.jsx               # iOS 스타일 프레임 컴포넌트
+│   ├── widgets.jsx                 # 공통 위젯 (슬라이더, 카드 등)
+│   ├── styles.css                  # 전체 스타일
+│   ├── manifest.json               # 웹 앱 매니페스트 (PWA)
+│   └── portfolio_data.json         # 포트폴리오 최적화 결과 데이터
+│
+└── screenshots/                    # UI 스크린샷
 ```
 
 ---
@@ -101,7 +107,7 @@ OPENAI_API_KEY=sk-...
 ### 2. 서버 실행
 
 ```bash
-uvicorn api_server:app --reload --port 8000
+uvicorn backend.api_server:app --reload --port 8000
 ```
 
 브라우저에서 `http://localhost:8000` 접속
