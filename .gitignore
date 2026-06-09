@@ -12,4 +12,5 @@ __pycache__/
 .DS_Store
 
 # 불필요한 디렉토리
+screenshots/
 uploads/
